@@ -33,7 +33,7 @@ export default function Header() {
             underline="none"
             to="/"
           >
-            My Pet Store(AWS SDK)!
+            My Device Store
           </Link>
         </Typography>
 
