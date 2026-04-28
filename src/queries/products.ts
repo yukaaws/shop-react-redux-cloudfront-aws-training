@@ -29,7 +29,7 @@ export function useAvailableProduct(id?: string) {
     ["product", { id }],
     async () => {
       const res = await axios.get<AvailableProduct>(
-        `${API_PATHS.bff}/product/${id}`
+        `${API_PATHS.bff}/products/${id}`
       );
       return res.data;
     },
@@ -55,6 +55,27 @@ export function useUpsertAvailableProduct() {
     })
   );
 }
+
+
+export function useCreateAvailableProduct() {
+  return useMutation((values: AvailableProduct) =>
+    axios.post(
+      `${API_PATHS.bff}/products`,
+      {
+        title: values.title,
+        description: values.description,
+        price: values.price,
+        count: values.count,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+  );
+}
+
 
 export function useDeleteAvailableProduct() {
   return useMutation((id: string) =>
