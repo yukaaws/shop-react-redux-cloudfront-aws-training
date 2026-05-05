@@ -5,6 +5,7 @@ import {
   aws_s3_deployment,
   CfnOutput,
   RemovalPolicy,
+  Duration,
 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
@@ -16,10 +17,10 @@ export class DeploymentService extends Construct {
 
 
     const hostingBucket = new aws_s3.Bucket(this, 'FrontendBucket', {
-        blockPublicAccess: aws_s3.BlockPublicAccess.BLOCK_ALL,
-        // equired for automatic deletion
-        removalPolicy: RemovalPolicy.DESTROY,
-       autoDeleteObjects: true,
+      blockPublicAccess: aws_s3.BlockPublicAccess.BLOCK_ALL,
+      // equired for automatic deletion
+      removalPolicy: RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
     });
 
     const distribution = new aws_cloudfront.Distribution(
@@ -33,13 +34,22 @@ export class DeploymentService extends Construct {
           viewerProtocolPolicy: aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         },
         defaultRootObject: 'index.html',
+
         errorResponses: [
+          {
+            httpStatus: 403,
+            responseHttpStatus: 200,
+            responsePagePath: '/index.html',
+            ttl: Duration.seconds(0),
+          },
           {
             httpStatus: 404,
             responseHttpStatus: 200,
             responsePagePath: '/index.html',
+            ttl: Duration.seconds(0),
           },
         ],
+
       }
     );
     new aws_s3_deployment.BucketDeployment(this, 'BucketDeployment', {
