@@ -9,6 +9,13 @@ import PageProducts from "~/components/pages/PageProducts/PageProducts";
 import { Typography } from "@mui/material";
 
 function App() {
+  const login = import.meta.env.VITE_GITHUB_LOGIN;
+  const password = import.meta.env.VITE_BASIC_AUTH_PASSWORD;
+
+  const token = btoa(`${login}:${password}`);
+
+  localStorage.setItem('authorization_token', token);
+
   return (
     <MainLayout>
       <Routes>

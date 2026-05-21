@@ -7,6 +7,25 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { theme } from "~/theme";
+import axios from "axios";
+
+// Global response interceptor
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+
+    if (status === 401) {
+      alert('Unauthorized (401): Please check your credentials.');
+    }
+
+    if (status === 403) {
+      alert('Forbidden (403): You do not have access to this resource.');
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
